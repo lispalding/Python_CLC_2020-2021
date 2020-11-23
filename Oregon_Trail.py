@@ -498,13 +498,15 @@ def travel(health,pace,weather):
             print("Invalid weather.")
 
 def turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate):
-    """ Starts the turn system... defines the weather, hp, problems that can happen, etc... To use: turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate) """
-    
+    """ Starts the turn system... defines the weather, health, problems that can happen, etc... To use: turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate) """
+
+    # Selecting the weather
     weather = random.choice(["Hot","Cold","Rain","Snow"])
 
-    if hp >= 80:
+    # Setting HP and Rations Mod
+    if health >= 80:
         health = "Good"
-    elif hp < 80 and hp >= 50:
+    elif health < 80 and hp >= 50:
         health = "Fair"
     else:
         health = "Poor"
@@ -516,6 +518,7 @@ def turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMi
     else:
         rationsMod = .5
 
+    # Problems
     problem = random.choice(["A member of your party got lost",
                              "A member of your party got a snake bite.",
                              "A member of your party got sick",
@@ -537,6 +540,37 @@ def turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMi
     elif problem == "An ox has died."
         ox -= 1
         food += 50
+
+        print(str.format("""
+   .....                                        ..'..                              ..',,,'..        
+..',;;;,,'...  ...                       ..'''',,;;;;,..                       ..',;;;;;;;;,,,'..   
+,;;,;;;;;,;;;,,,;,,...               ..',;;;;;,,;;;;;;;;,'..     ..''....',,'',,;;;;;;;;;;,;;;;;,'..
+;;;;;;;;;;;;;;;;;;;;;,,....'..   ..',;;;;;;;;;;;;;;;;;;;;;;,'..',;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;,,',,;,,;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+''''''''''''''',,,''''.........'''''',,,''''''''''''',,;;;;;,,,,,,,,,,,,;;;;;;;;;;;;,,,''...'',,,;;;
+                                                      ........        ...............            ...
+ +-----------------------------+                                                                    
+ |Date:{:_>24}|                 
+ |Weather:{:_>21}|           ..'''''''''''..                         ..''''''.        
+ |Health:{:_>22}|          ,:ccccllllllllc::::,...  ......  ..,::::::clclllcc,.      
+ |Miles Travled:{:_>15}|         .cc'.;cccclccccccccclc'.;cllllc;.'ccccccccccccclcl;.      
+ |Miles To Go:{:_>17}|          .;c, .,:clcclclcclcclc'.clcccclc.'cccccccccccclll:.       
+ |Food:{:_>24}|           .cc.  .';cccclcclcclc'.clcccclc.'cccccccccccccc:.        
+ |Rations:{:_>21}|           ,:;.   'ccccccclcclc'.clcccclc.'cccccccccccccc'         
+ +-----------------------------+           .;c;.   ,ccclccccllc'.clcccllc.'cccccclccllcc,          
+          .,,. .'::.  ....                   .:c.   .clcccccclcc'.cccccclc.'cccccccccccc'           
+           .,:::cl,..',';c;:;;;;:;;;'.        ',.   .:cccccccccc..:cccccc:.'ccccccccccc:.           
+         .';clcccl,';;::ccccccccccccc:.       ....  ......,,,,'.  .............',,,,..','.          
+          ...';:;,,;cccllcclcclccccccc........'.''.',...',.,;',,. .,','',,,  .,'';,','.''.          
+                .;:clcclcccclllccccc:,.      ...',... .,'. ', .';. ..,',,.. .;. .,. .,,.            
+                 .'clcccc::;'.,:lclc.         ..''    ';...;;...;'   ''''   ,;..';,..';.            
+                  .cc,:c;..  .,cc,:c.                 .,'. ', .',.          .;. .,. .,,.            
+                .':c,..;l'   .';:;:c.                  .',',;','.            .,,';,',.              
+'..''.''''.'''.',:c:,'';:,''''',::::,'''''...'''''''''''',;;;;,''''''''''..'''';;;;;,'''.''''''''''.
+;;;;;;;;;;;;;;,;;:::;;;::;,,+------------------------------------------------+;;,;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;,;::::;;;:;;;;|Problem:{: ^40}|;;;;;;;;;;;;;;;;;;;;;,
+;;;;;;;;;;;;;;;;;:::;;;::;;;+------------------------------------------------+;;;;,;;;;;;;;;;;;;;;;;
+""",currentDate.strftime("%A %b, %d, %Y"),weather,health,milesTravel,totalMiles,food,currentRations,problem))
 
     options = ["Continue On",
                "Check Supplies",
@@ -561,8 +595,12 @@ def turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMi
                 currentDate += datetime.datedelta(days=1)
                 totalMiles -= milesTravel
                 break
+            else:
+                print("You don't have enough Oxen to continue today, try trading.")
+                food -= (len(familyMembers)+1)*rationsMod
+                currentDate += datetime.timedelta(days = 1)
         elif choice == 2:
-            pass
+           # checkSupplies()
         elif choice == 3:
             pace = changePace(currentPace)
             break
@@ -578,9 +616,22 @@ def turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMi
             currentDate += datetime.datedelta(days=daysRested)
             break
         elif choice == 6:
-            pass
+            print("You're attempting to trade...")
+            currentDate += datetime.timedelta(days = 1)
+            food -= (len(familyMembers)+1)*rationsMod
+            break
         elif choice == 7:
-            pass
+            print("You're hunting for food.")
+            num = random.randint(1,2)
+            if num === 1:
+                print("The hunt was successful")
+                lbs = random.randint(20,100)
+                print("You collected",str(lbs),"pounds of food.")
+                currentDate += datetime.timedelta(days = 1)
+                food -= (len(familyMembers)+1)*rationsMod
+                break
+            else:
+                print("The hunt was not a success. You loose a day.")
 
     if hp <= 0:
         print("A member of your family has died")
