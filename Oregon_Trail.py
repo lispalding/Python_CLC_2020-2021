@@ -311,14 +311,22 @@ def  shop(money,food,ammo,clothes,oxen):
             
         elif choice == 5:
             # Setting Inventory to nothing
+<<<<<<< HEAD
             inventory = []
+=======
+            parts = []
+>>>>>>> 6cd9393ba929be6ff0318180e020a2c76720b1cd
 
             # Printing the welcome screen
             print("It is a good idea to have a few spare parts for your wagon on hand... A broken wagon can be a death sentence.")
 
             # Setting variables
             partsBill = 0.00
+<<<<<<< HEAD
             parts = ["Wagon Wheel","Wagon Axle","Wagon Tongue","Back to main shop"]
+=======
+            inventory = ["Wagon Wheel","Wagon Axle","Wagon Tongue","Back to main shop"]
+>>>>>>> 6cd9393ba929be6ff0318180e020a2c76720b1cd
             partsCost = [10.00,20.00,50.00,partsBill]
 
             while True:
@@ -335,24 +343,40 @@ def  shop(money,food,ammo,clothes,oxen):
                     if item == 1:
                         answer = answer = getNumber(high=6,low=0,question="\nHow many wagon wheels do you want?")
                         for i in range(answer):
+<<<<<<< HEAD
                             inventory.append("Wagon Wheel")
+=======
+                            parts.append("Wagon Wheel")
+>>>>>>> 6cd9393ba929be6ff0318180e020a2c76720b1cd
                         partsBill += partsCost[0]*answer
                     elif item == 2:
                         answer = getNumber(high=6,low=0,question="\nHow many wagon wheels do you want?")
                         for i in range(answer):
+<<<<<<< HEAD
                             inventory.append("Wagon Axle")
+=======
+                            parts.append("Wagon Axle")
+>>>>>>> 6cd9393ba929be6ff0318180e020a2c76720b1cd
                         partsBill += partsCost[1]*answer
                     elif item == 3:
                         answer = getNumber(high=6,low=0,question="\nHow many wagon wheels do you want?")
                         for i in range(answer):
+<<<<<<< HEAD
                             inventory.append("Wagon Tongue")
+=======
+                            parts.append("Wagon Tongue")
+>>>>>>> 6cd9393ba929be6ff0318180e020a2c76720b1cd
                         partsBill += partsCost[2]*answer
                     else:
                         bill += partsBill
                         moneySpent[4] = partsBill
                         break
             
+<<<<<<< HEAD
         else:
+=======
+        elif choice == 6:
+>>>>>>> 6cd9393ba929be6ff0318180e020a2c76720b1cd
             # Printing the store checkout
             print(str.format("You have spent:     ${:.2f}", bill))
             correct = input("Is this correct?")
@@ -367,6 +391,7 @@ def  shop(money,food,ammo,clothes,oxen):
                     print("This isn't valid... You've spent more money than you have!")
             else:
                 print("Back to the store then!")
+<<<<<<< HEAD
 
 def travel(health,pace,weather):
     # Setting up variables
@@ -383,14 +408,126 @@ def travel(health,pace,weather):
             mph = 2
         else:
             mph = 4
+=======
+        else:
+            print("Invalid input!")
+    
+
+def changeRations(currentRations):
+    # Variables
+    rations = ["Filling", "Meager", "Bare Bones"]
+    currentRations = ""
+    
+    # Printing Rations Menu
+    menuChoices(rations)
+
+    # Printing the current rations
+    print(currentRations)
+
+    # Creating a loop so if invalid input is entered, the menu keeps on appearing
+    while True:
+        for i in range(len(rations)):
+            userChoice = getNumber(high=3,low=1,question="What rations would you like?  ")
+
+            # Creating if statements to return what the user desires
+            if userChoice == 1:
+                currentRations = "Filling"
+                return currentRations
+            elif userChoice == 2:
+                currentRations = "Meager"
+                return currentRations
+            elif userchoice == 3:
+                currentRations = "Bare Bones"
+                return currentRations
+            else:
+                print("You can't do that!\n")
+
+def changePace(currentPace):
+    # Variables
+    pace = ["Slow","Normal","Fast"]
+    currentPace = ""
+
+    menuChoices(pace)
+    print(currentPace)
+    
+    for i in range(len(pace)):
+        choice = getNumber(1,3,"What pace would you like?  ")
+
+        # Creating if statements to return what the operator desires
+        if choice == 1:
+            currentPace = "Slow"
+            return currentPace
+        elif choice == 2:
+            currentPace = "Normal"
+            return currentPace
+        elif choice == 3:
+            currentPace = "Fast"
+            return currentPace
+        else:
+            print("That is not an option!")
+
+
+def rest(currentRations,currentHealth):
+    """ Determines how much health is restored by rest. To use: rest(currentRations,currentHealth) """
+    
+    # Variables
+    healthMod = 0
+
+    # Calling the getNumber variable to get a good number on how many days the user wants....
+    numDays = getNumber(10,0,"How many days do you want to rest? (Only 0-10)  ")
+
+    # Making sure that the user picks something
+    if (currentRations == "Filling"):
+        healthMod = 2
+    elif (currentRations == "Meager"):
+        healthMod = 1
+    elif (currentRations == "Bare Bones"):
+        healthMod = 5
+
+    healthGain = 10*healthMod*numDays
+
+    if (healthGain+currentHealth > 100):
+        currentHealth = 100
+    else:
+        currentHealth += healthGain
+        round(currentHealth)
+
+    print("Your health is at:",currentHealth)
+
+def travel(health,pace,weather):
+    """ Determines miles traveled. To use: travel(health,pace,weather) """
+    
+    # Setting up variables
+    mph = 0
+    hours = 0
+    milesTravel = 0
+
+    while True:
+        # Setting up the pace effects
+        if (pace == "Slow"):
+            mph = 1
+        elif (pace == "Normal"):
+            mph = 2
+        elif (pace == "Fast"):
+            mph = 4
+        else:
+            print("Invalid pace.")
+>>>>>>> 6cd9393ba929be6ff0318180e020a2c76720b1cd
 
         # Setting up the health effects
         if (health == "Poor"):
             hours = 4
         elif (health == "Fair"):
             hours = 6
+<<<<<<< HEAD
         else:
             hours = 8
+=======
+        elif (health == "Good"):
+            hours = 8
+        else:
+            print("Invalid health.")
+>>>>>>> 6cd9393ba929be6ff0318180e020a2c76720b1cd
 
         # Weather effects
         if (weather == "Hot"):
@@ -402,12 +539,133 @@ def travel(health,pace,weather):
         elif (weather == "Rain"):
             milesTravel = mph*hours*.5
             return milesTravel
+<<<<<<< HEAD
         else:
             milesTravel = mph*hours*0
             return milesTravel
     
+=======
+        elif (weather == "Snow"):
+            milesTravel = mph*hours*0
+            return milesTravel
+        else:
+            print("Invalid weather.")
 
+def turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate):
+    """ Starts the turn system... defines the weather, hp, problems that can happen, etc... To use: turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate) """
+    
+    weather = random.choice(["Hot","Cold","Rain","Snow"])
+
+    if hp >= 80:
+        health = "Good"
+    elif hp < 80 and hp >= 50:
+        health = "Fair"
+    else:
+        health = "Poor"
+
+    if rations == "Filling":
+        rationsMod = 2
+    elif rations == "Meager":
+        rationsMod = 1
+    else:
+        rationsMod = .5
+
+    problem = random.choice(["A member of your party got lost",
+                             "A member of your party got a snake bite.",
+                             "A member of your party got sick",
+                             "An ox has died.",
+                             "No problems","No problems","No problems","No problems","No problems","No problems",
+                             "No problems","No problems","No problems","No problems","No problems","No problems",
+                             "No problems","No problems","No problems","No problems","No problems","No problems",
+                             "No problems","No problems","No problems","No problems","No problems","No problems"])
+    if problem == "A member of your party got lost":
+        lost = random.randint(1,7)
+        famLost = random.choice(familyMembers)
+        print(str.format("{} got lost for {} days...",famLost,lost))
+        currentDate += datetime.timedelta(days=lost)
+        food -= (len(familyMembers))*rationsMod*lost
+    elif problem == "A member of your party got a snake bite.":
+        health -= 50
+    elif problem == "A member of your party got sick":
+        hp -= 20
+    elif problem == "An ox has died."
+        ox -= 1
+        food += 50
+
+    options = ["Continue On",
+               "Check Supplies",
+               "Change Pace",
+               "Change Rations",
+               "Stop and Rest",
+               "Attempt to trade",
+               "Hunt for food"]
+
+    while True:
+        menuChoices(options)
+        
+        getNumber(1,6,"\n \tWhat would you like to do?  ")
+
+        if choice == 1:
+            if oxen > 0:
+                milesTravel = travel(pace,weather,currentHealth)
+                if food > 0:
+                    food -= (len(familyMembers)+1)*rationsMod
+                else:
+                    hp -= 10*len(familyMembers)
+                currentDate += datetime.datedelta(days=1)
+                totalMiles -= milesTravel
+                break
+        elif choice == 2:
+            pass
+        elif choice == 3:
+            pace = changePace(currentPace)
+            break
+        elif choice == 4:             
+            currentRations = changeRations(currentRations)
+            break
+        elif choice == 5:
+            hp, daysRested = rest(currentRations,currentHealth)
+            if food > 0:
+                food -= ((len(familyMembers)+1)*rationsMod)*daysRested
+            else:
+                hp -= 10*len(familyMembers)
+            currentDate += datetime.datedelta(days=daysRested)
+            break
+        elif choice == 6:
+            pass
+        elif choice == 7:
+            pass
+
+    if hp <= 0:
+        print("A member of your family has died")
+        die = random.choice(familyMembers)
+        familyMembers.remove(die)
+        hp = 100
+        input("Press enter to continue:  ")
+
+    if food < 0:
+        food = 0
+>>>>>>> 6cd9393ba929be6ff0318180e020a2c76720b1cd
+
+    if totalMiles < 0:
+        totalMiles = 0
+
+    return oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate
+        
 def play():
+    """ Starts the game. To use: play() """
+    
+    # Importing things needed
+    import datetime
+    import random
+
+    # Starting the play stuff
+    #############################################
+
+    START_DATE = datetime.datetime(1848,3,1)
+    currentDate = START_DATE
+
+    # Variables
     money = 0
     prof = ""
     listOfProfs = []
@@ -419,8 +677,38 @@ def play():
     oxen = 0
     parts = []
     bill = 0
+<<<<<<< HEAD
     prof,money = charCreate()
     familyMembers,wagonLeader = familySetup()
     shop(money,food,ammo,clothes,oxen)
 
 play()
+=======
+    hp = 100
+    totalMiles = 2000
+    milesTravel = 0
+
+    # Calling functions and updating variables
+    health = "Good"
+    weather = "Cold"
+    pace = "Normal"
+
+    familyList = wagonLeader,familyMembers
+
+    prof,money = charCreate()
+    familyMembers,wagonLeader = familySetup()
+    shop(money,food,ammo,clothes,oxen)
+    
+    #############################################
+
+    # Setting win conditions
+    while totalMiles > 0 and len(familyMembers > 0:
+        turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate)
+    if toalMiles <= 0:
+        print("Congrats you made it!")
+    else:
+        print("You lost... You and your family have all died.")
+
+currentHealth = 50
+rest("Meager",currentHealth)
+>>>>>>> 6cd9393ba929be6ff0318180e020a2c76720b1cd
