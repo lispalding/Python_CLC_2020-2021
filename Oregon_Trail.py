@@ -174,9 +174,9 @@ def charCreate():
         else:
             print("Sorry, that is not an option.")
 
-def getName():
+def getName(question):
     while True:
-        name = input("What are the names of your family members (Including yourself)?  ") # Getting family memeber names
+        name = input(question) # Getting family memeber names
         if name == name.isnumeric: # Making sure that the name is numeric
              print("Not valid!!")
         elif len(name) > 1:
@@ -187,18 +187,17 @@ def getName():
 
 def familySetup(): # Setting up the family
     familyMembers = []
-    wagonLeader = getName()
-    familyMem = getNumber(high=7,low=5)
-    print("You need at 5-7 family memebers... How many do you have?")
+    wagonLeader = getName(question="What is the name of your wagon leader?")
+    familyMem = getNumber(high=7,low=5,question="You need at 5-7 family memebers... How many do you have?")
     for i in range(familyMem):
-        name = getName()
+        name = getName(question="What is the name of your family members?")
         familyMembers.append(name)
     return familyMembers, wagonLeader
     
 
-def getNumber(high,low): # Defining the high and low values with high=7 and low=5
+def getNumber(high,low,question): # Defining the high and low values with high=7 and low=5
     while True:
-        number = input()
+        number = input(question)
         if number.isnumeric():
             number = int(number)
             if (number >= low) and (number <= high):
@@ -211,7 +210,7 @@ def getNumber(high,low): # Defining the high and low values with high=7 and low=
         else: 
             print("Not valid!")
 
-def shop(money):
+def  shop(money,food,ammo,clothes,oxen):
     # Defining the things needed in the stores
     ammo = 0
     food = 0
@@ -240,7 +239,7 @@ def shop(money):
         print(str.format("Total funds available: ${:.2f}",money-bill))
         print("=====================================================")
         
-        choice = getNumber(len(items),1)
+        choice = getNumber(len(items),1,question="What do you want to buy?")
 
         if choice == 1:
             # Resetting the money spent on this if the menu is acessed twice
@@ -251,10 +250,9 @@ def shop(money):
             # Printing the menu
             print('''There are two oxek in a yoke; I reccomend at least three yokes. I charge 40$ a yoke.''')
             print(str.format("Total bill so far:     ${:.2f}", bill))
-            print("\nHow many yokes do you want?")
 
             # Updating variables
-            answer = getNumber(high=5,low=1)
+            answer = getNumber(high=5,low=1,question="\nHow many yokes do you want?")
             cost = answer*40
             bill += cost
             ox = answer*2
@@ -270,10 +268,9 @@ def shop(money):
             print("I recommend that you take 200 pounds of food per family member for this trip.")
             print("\n I price 20 cents per pound..")
             print(str.format("Total bill so far:     ${:.2f}", bill))
-            print("How many pounds of food do you want?")
 
             # Updating variables
-            answer = getNumber(high=1450,low=1)
+            answer = getNumber(high=1450,low=1,question="\nHow many pounds of food do you want?")
             cost = answer*.20
             bill += cost
             food = answer
@@ -288,10 +285,9 @@ def shop(money):
             # Printing Menu
             print("The mountains will be cold, and I reccomend 2 sets of clothes per person. I charge $10 per set.")
             print(str.format("Total bill so far:     ${:.2f}", bill))
-            print("How many sets of clothes do you want?")
 
             #Updating variables
-            answer = getNumber(high=20,low=0)
+            answer = getNumber(high=20,low=0,question="\nHow many sets of clothes do you want?")
             cost = answer*10
             bill += cost
             clothes = answer
@@ -305,17 +301,57 @@ def shop(money):
 
             # Printing the menu
             print("I sell ammunition in boxes of 20 bullets. Each box costs $2.00.")
-            print("How many boxes do you want?")
 
             # Updating variables
-            answer = getNumber(high=30,low=0)
+            answer = getNumber(high=30,low=0,question="\nHow many boxes do you want?")
             cost = answer*2
             bill += cost
             ammo = answer
             moneySpent[3] = cost
             
         elif choice == 5:
-            pass
+            # Setting Inventory to nothing
+            parts = []
+
+            # Printing the welcome screen
+            print("It is a good idea to have a few spare parts for your wagon on hand... A broken wagon can be a death sentence.")
+
+            # Setting variables
+            partsBill = 0.00
+            inventory = ["Wagon Wheel","Wagon Axle","Wagon Tongue","Back to main shop"]
+            partsCost = [10.00,20.00,50.00,partsBill]
+
+            while True:
+                partsCost[len(partsCost)-1] = partsBill
+                print("Here is the list of things you can buy...")
+                
+                for i in range(len(parts)):
+                    print(str.format("{}.     {:20}     ${:.2f}",parts[i],partsCost[i]))
+                    print(str.format("Total bill so far:     ${:.2f}",bill))
+                    print(str.format("Total funds available: ${:.2f}",money))
+                    item = int(input("What item would you like to buy"))
+
+
+                    if item == 1:
+                        answer = answer = getNumber(high=6,low=0,question="\nHow many wagon wheels do you want?")
+                        for i in range(answer):
+                            parts.append("Wagon Wheel")
+                        partsBill += partsCost[0]*answer
+                    elif item == 2:
+                        answer = getNumber(high=6,low=0,question="\nHow many wagon wheels do you want?")
+                        for i in range(answer):
+                            parts.append("Wagon Axle")
+                        partsBill += partsCost[1]*answer
+                    elif item == 3:
+                        answer = getNumber(high=6,low=0,question="\nHow many wagon wheels do you want?")
+                        for i in range(answer):
+                            parts.append("Wagon Tongue")
+                        partsBill += partsCost[2]*answer
+                    else:
+                        bill += partsBill
+                        moneySpent[4] = partsBill
+                        break
+            
         elif choice == 6:
             # Printing the store checkout
             print(str.format("You have spent:     ${:.2f}", bill))
@@ -326,24 +362,290 @@ def shop(money):
                 if (money == moneySpent) or (money > moneySpent[0]):
                     money = money-moneySpent[0,1,2,3,4]
                     
-                    break
+                    return ox, food, clothes, inventory
                 else:
                     print("This isn't valid... You've spent more money than you have!")
             else:
                 print("Back to the store then!")
-            
         else:
+            print("Invalid input!")
+    
+
+def changeRations(currentRations):
+    # Variables
+    rations = ["Filling", "Meager", "Bare Bones"]
+    currentRations = ""
+    
+    # Printing Rations Menu
+    menuChoices(rations)
+
+    # Printing the current rations
+    print(currentRations)
+
+    # Creating a loop so if invalid input is entered, the menu keeps on appearing
+    while True:
+        for i in range(len(rations)):
+            userChoice = getNumber(high=3,low=1,question="What rations would you like?  ")
+
+            # Creating if statements to return what the user desires
+            if userChoice == 1:
+                currentRations = "Filling"
+                return currentRations
+            elif userChoice == 2:
+                currentRations = "Meager"
+                return currentRations
+            elif userchoice == 3:
+                currentRations = "Bare Bones"
+                return currentRations
+            else:
+                print("You can't do that!\n")
+
+def changePace(currentPace):
+    # Variables
+    pace = ["Slow","Normal","Fast"]
+    currentPace = ""
+
+    menuChoices(pace)
+    print(currentPace)
+    
+    for i in range(len(pace)):
+        choice = getNumber(1,3,"What pace would you like?  ")
+
+        # Creating if statements to return what the operator desires
+        if choice == 1:
+            currentPace = "Slow"
+            return currentPace
+        elif choice == 2:
+            currentPace = "Normal"
+            return currentPace
+        elif choice == 3:
+            currentPace = "Fast"
+            return currentPace
+        else:
+            print("That is not an option!")
+
+
+def rest(currentRations,currentHealth):
+    """ Determines how much health is restored by rest. To use: rest(currentRations,currentHealth) """
+    
+    # Variables
+    healthMod = 0
+
+    # Calling the getNumber variable to get a good number on how many days the user wants....
+    numDays = getNumber(10,0,"How many days do you want to rest? (Only 0-10)  ")
+
+    # Making sure that the user picks something
+    if (currentRations == "Filling"):
+        healthMod = 2
+    elif (currentRations == "Meager"):
+        healthMod = 1
+    elif (currentRations == "Bare Bones"):
+        healthMod = 5
+
+    healthGain = 10*healthMod*numDays
+
+    if (healthGain+currentHealth > 100):
+        currentHealth = 100
+    else:
+        currentHealth += healthGain
+        round(currentHealth)
+
+    print("Your health is at:",currentHealth)
+
+def travel(health,pace,weather):
+    """ Determines miles traveled. To use: travel(health,pace,weather) """
+    
+    # Setting up variables
+    mph = 0
+    hours = 0
+    milesTravel = 0
+
+    while True:
+        # Setting up the pace effects
+        if (pace == "Slow"):
+            mph = 1
+        elif (pace == "Normal"):
+            mph = 2
+        elif (pace == "Fast"):
+            mph = 4
+        else:
+            print("Invalid pace.")
+
+        # Setting up the health effects
+        if (health == "Poor"):
+            hours = 4
+        elif (health == "Fair"):
+            hours = 6
+        elif (health == "Good"):
+            hours = 8
+        else:
+            print("Invalid health.")
+
+        # Weather effects
+        if (weather == "Hot"):
+            milesTravel = mph*hours*1
+            return milesTravel
+        elif (weather == "Cold"):
+            milesTravel = mph*hours*.75
+            return milesTravel
+        elif (weather == "Rain"):
+            milesTravel = mph*hours*.5
+            return milesTravel
+        elif (weather == "Snow"):
+            milesTravel = mph*hours*0
+            return milesTravel
+        else:
+            print("Invalid weather.")
+
+def turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate):
+    """ Starts the turn system... defines the weather, hp, problems that can happen, etc... To use: turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate) """
+    
+    weather = random.choice(["Hot","Cold","Rain","Snow"])
+
+    if hp >= 80:
+        health = "Good"
+    elif hp < 80 and hp >= 50:
+        health = "Fair"
+    else:
+        health = "Poor"
+
+    if rations == "Filling":
+        rationsMod = 2
+    elif rations == "Meager":
+        rationsMod = 1
+    else:
+        rationsMod = .5
+
+    problem = random.choice(["A member of your party got lost",
+                             "A member of your party got a snake bite.",
+                             "A member of your party got sick",
+                             "An ox has died.",
+                             "No problems","No problems","No problems","No problems","No problems","No problems",
+                             "No problems","No problems","No problems","No problems","No problems","No problems",
+                             "No problems","No problems","No problems","No problems","No problems","No problems",
+                             "No problems","No problems","No problems","No problems","No problems","No problems"])
+    if problem == "A member of your party got lost":
+        lost = random.randint(1,7)
+        famLost = random.choice(familyMembers)
+        print(str.format("{} got lost for {} days...",famLost,lost))
+        currentDate += datetime.timedelta(days=lost)
+        food -= (len(familyMembers))*rationsMod*lost
+    elif problem == "A member of your party got a snake bite.":
+        health -= 50
+    elif problem == "A member of your party got sick":
+        hp -= 20
+    elif problem == "An ox has died."
+        ox -= 1
+        food += 50
+
+    options = ["Continue On",
+               "Check Supplies",
+               "Change Pace",
+               "Change Rations",
+               "Stop and Rest",
+               "Attempt to trade",
+               "Hunt for food"]
+
+    while True:
+        menuChoices(options)
+        
+        getNumber(1,6,"\n \tWhat would you like to do?  ")
+
+        if choice == 1:
+            if oxen > 0:
+                milesTravel = travel(pace,weather,currentHealth)
+                if food > 0:
+                    food -= (len(familyMembers)+1)*rationsMod
+                else:
+                    hp -= 10*len(familyMembers)
+                currentDate += datetime.datedelta(days=1)
+                totalMiles -= milesTravel
+                break
+        elif choice == 2:
+            pass
+        elif choice == 3:
+            pace = changePace(currentPace)
+            break
+        elif choice == 4:             
+            currentRations = changeRations(currentRations)
+            break
+        elif choice == 5:
+            hp, daysRested = rest(currentRations,currentHealth)
+            if food > 0:
+                food -= ((len(familyMembers)+1)*rationsMod)*daysRested
+            else:
+                hp -= 10*len(familyMembers)
+            currentDate += datetime.datedelta(days=daysRested)
+            break
+        elif choice == 6:
+            pass
+        elif choice == 7:
             pass
 
+    if hp <= 0:
+        print("A member of your family has died")
+        die = random.choice(familyMembers)
+        familyMembers.remove(die)
+        hp = 100
+        input("Press enter to continue:  ")
+
+    if food < 0:
+        food = 0
+
+    if totalMiles < 0:
+        totalMiles = 0
+
+    return oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate
+        
 def play():
+    """ Starts the game. To use: play() """
+    
+    # Importing things needed
+    import datetime
+    import random
+
+    # Starting the play stuff
+    #############################################
+
+    START_DATE = datetime.datetime(1848,3,1)
+    currentDate = START_DATE
+
+    # Variables
     money = 0
     prof = ""
     listOfProfs = []
     familyMembers = []
     wagonLeader = ""
+    ammo = 0
+    food = 0
+    clothes = 0
+    oxen = 0
+    parts = []
+    bill = 0
+    hp = 100
+    totalMiles = 2000
+    milesTravel = 0
+
+    # Calling functions and updating variables
+    health = "Good"
+    weather = "Cold"
+    pace = "Normal"
+
+    familyList = wagonLeader,familyMembers
+
     prof,money = charCreate()
     familyMembers,wagonLeader = familySetup()
-    shop(money)
+    shop(money,food,ammo,clothes,oxen)
+    
+    #############################################
 
-money = 100
-shop(money)
+    # Setting win conditions
+    while totalMiles > 0 and len(familyMembers > 0:
+        turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate)
+    if toalMiles <= 0:
+        print("Congrats you made it!")
+    else:
+        print("You lost... You and your family have all died.")
+
+currentHealth = 50
+rest("Meager",currentHealth)
