@@ -174,9 +174,9 @@ def charCreate():
         else:
             print("Sorry, that is not an option.")
 
-def getName():
+def getName(question):
     while True:
-        name = input("What are the names of your family members (Including yourself)?  ") # Getting family memeber names
+        name = input(question) # Getting family memeber names
         if name == name.isnumeric: # Making sure that the name is numeric
              print("Not valid!!")
         elif len(name) > 1:
@@ -187,18 +187,17 @@ def getName():
 
 def familySetup(): # Setting up the family
     familyMembers = []
-    wagonLeader = getName()
-    familyMem = getNumber(high=7,low=5)
-    print("You need at 5-7 family memebers... How many do you have?")
+    wagonLeader = getName(question="What is the name of your wagon leader?")
+    familyMem = getNumber(high=7,low=5,question="You need at 5-7 family memebers... How many do you have?")
     for i in range(familyMem):
-        name = getName()
+        name = getName(question="What is the name of your family members?")
         familyMembers.append(name)
     return familyMembers, wagonLeader
     
 
-def getNumber(high,low): # Defining the high and low values with high=7 and low=5
+def getNumber(high,low,question): # Defining the high and low values with high=7 and low=5
     while True:
-        number = input()
+        number = input(question)
         if number.isnumeric():
             number = int(number)
             if (number >= low) and (number <= high):
@@ -211,7 +210,7 @@ def getNumber(high,low): # Defining the high and low values with high=7 and low=
         else: 
             print("Not valid!")
 
-def shop(money):
+def  shop(money,food,ammo,clothes,oxen):
     # Defining the things needed in the stores
     ammo = 0
     food = 0
@@ -240,7 +239,7 @@ def shop(money):
         print(str.format("Total funds available: ${:.2f}",money-bill))
         print("=====================================================")
         
-        choice = getNumber(len(items),1)
+        choice = getNumber(len(items),1,question="What do you want to buy?")
 
         if choice == 1:
             # Resetting the money spent on this if the menu is acessed twice
@@ -251,10 +250,9 @@ def shop(money):
             # Printing the menu
             print('''There are two oxek in a yoke; I reccomend at least three yokes. I charge 40$ a yoke.''')
             print(str.format("Total bill so far:     ${:.2f}", bill))
-            print("\nHow many yokes do you want?")
 
             # Updating variables
-            answer = getNumber(high=5,low=1)
+            answer = getNumber(high=5,low=1,question="\nHow many yokes do you want?")
             cost = answer*40
             bill += cost
             ox = answer*2
@@ -270,10 +268,9 @@ def shop(money):
             print("I recommend that you take 200 pounds of food per family member for this trip.")
             print("\n I price 20 cents per pound..")
             print(str.format("Total bill so far:     ${:.2f}", bill))
-            print("How many pounds of food do you want?")
 
             # Updating variables
-            answer = getNumber(high=1450,low=1)
+            answer = getNumber(high=1450,low=1,question="\nHow many pounds of food do you want?")
             cost = answer*.20
             bill += cost
             food = answer
@@ -288,10 +285,9 @@ def shop(money):
             # Printing Menu
             print("The mountains will be cold, and I reccomend 2 sets of clothes per person. I charge $10 per set.")
             print(str.format("Total bill so far:     ${:.2f}", bill))
-            print("How many sets of clothes do you want?")
 
             #Updating variables
-            answer = getNumber(high=20,low=0)
+            answer = getNumber(high=20,low=0,question="\nHow many sets of clothes do you want?")
             cost = answer*10
             bill += cost
             clothes = answer
@@ -305,18 +301,58 @@ def shop(money):
 
             # Printing the menu
             print("I sell ammunition in boxes of 20 bullets. Each box costs $2.00.")
-            print("How many boxes do you want?")
 
             # Updating variables
-            answer = getNumber(high=30,low=0)
+            answer = getNumber(high=30,low=0,question="\nHow many boxes do you want?")
             cost = answer*2
             bill += cost
             ammo = answer
             moneySpent[3] = cost
             
         elif choice == 5:
-            pass
-        elif choice == 6:
+            # Setting Inventory to nothing
+            inventory = []
+
+            # Printing the welcome screen
+            print("It is a good idea to have a few spare parts for your wagon on hand... A broken wagon can be a death sentence.")
+
+            # Setting variables
+            partsBill = 0.00
+            parts = ["Wagon Wheel","Wagon Axle","Wagon Tongue","Back to main shop"]
+            partsCost = [10.00,20.00,50.00,partsBill]
+
+            while True:
+                partsCost[len(partsCost)-1] = partsBill
+                print("Here is the list of things you can buy...")
+                
+                for i in range(len(parts)):
+                    print(str.format("{}.     {:20}     ${:.2f}",parts[i],partsCost[i]))
+                    print(str.format("Total bill so far:     ${:.2f}",bill))
+                    print(str.format("Total funds available: ${:.2f}",money))
+                    item = int(input("What item would you like to buy"))
+
+
+                    if item == 1:
+                        answer = answer = getNumber(high=6,low=0,question="\nHow many wagon wheels do you want?")
+                        for i in range(answer):
+                            inventory.append("Wagon Wheel")
+                        partsBill += partsCost[0]*answer
+                    elif item == 2:
+                        answer = getNumber(high=6,low=0,question="\nHow many wagon wheels do you want?")
+                        for i in range(answer):
+                            inventory.append("Wagon Axle")
+                        partsBill += partsCost[1]*answer
+                    elif item == 3:
+                        answer = getNumber(high=6,low=0,question="\nHow many wagon wheels do you want?")
+                        for i in range(answer):
+                            inventory.append("Wagon Tongue")
+                        partsBill += partsCost[2]*answer
+                    else:
+                        bill += partsBill
+                        moneySpent[4] = partsBill
+                        break
+            
+        else:
             # Printing the store checkout
             print(str.format("You have spent:     ${:.2f}", bill))
             correct = input("Is this correct?")
@@ -326,14 +362,50 @@ def shop(money):
                 if (money == moneySpent) or (money > moneySpent[0]):
                     money = money-moneySpent[0,1,2,3,4]
                     
-                    break
+                    return ox, food, clothes, inventory
                 else:
                     print("This isn't valid... You've spent more money than you have!")
             else:
                 print("Back to the store then!")
-            
+
+def travel(health,pace,weather):
+    # Setting up variables
+    miles = 2000
+    mph = 0
+    hours = 0
+    milesTravel = 0
+
+    while True:
+        # Setting up the pace effects
+        if (pace == "Slow"):
+            mph = 1
+        elif (pace == "Normal"):
+            mph = 2
         else:
-            pass
+            mph = 4
+
+        # Setting up the health effects
+        if (health == "Poor"):
+            hours = 4
+        elif (health == "Fair"):
+            hours = 6
+        else:
+            hours = 8
+
+        # Weather effects
+        if (weather == "Hot"):
+            milesTravel = mph*hours*1
+            return milesTravel
+        elif (weather == "Cold"):
+            milesTravel = mph*hours*.75
+            return milesTravel
+        elif (weather == "Rain"):
+            milesTravel = mph*hours*.5
+            return milesTravel
+        else:
+            milesTravel = mph*hours*0
+            return milesTravel
+    
 
 def play():
     money = 0
@@ -341,9 +413,14 @@ def play():
     listOfProfs = []
     familyMembers = []
     wagonLeader = ""
+    ammo = 0
+    food = 0
+    clothes = 0
+    oxen = 0
+    parts = []
+    bill = 0
     prof,money = charCreate()
     familyMembers,wagonLeader = familySetup()
-    shop(money)
+    shop(money,food,ammo,clothes,oxen)
 
-money = 100
-shop(money)
+play()
