@@ -98,7 +98,9 @@ MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 logoScreen()
 
 def mainDisplay():
-        title = '''
+    """Creates the main display. To use: mainDisplay() """
+    
+title = '''
    ___                     __ _                            _____                     _       _    
   / _ \     _ _    ___    / _` |   ___    _ _       o O O |_   _|    _ _   __ _     (_)     | |   
  | (_) |   | '_|  / -_)   \__, |  / _ \  | ' \     o        | |     | '_| / _` |    | |     | |   
@@ -106,16 +108,19 @@ def mainDisplay():
 _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""| {======|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""| 
 "`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'./o--000'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-' '''
          # This is the main Display Screen
-        print(title)
+print(title)
 
 def menuChoices(options):
+    """Creates a menu. To use: menuChoices(options) """
+    
     # Creating a choice menu base that we can call to
     index = 1
+    print("\n")
     for i in options:
         print(str.format("{}................{}",index,i))
         index+=1
-    while True:
         
+    while True:
         userChoice = input("What do you wish to do?  ")
         if userChoice.isnumeric():
             userChoice = int(userChoice)
@@ -128,13 +133,26 @@ def menuChoices(options):
     
 
 def mainMenu():
+    """ Runs the main menu. To use: mainMenu() """
 
     mainDisplay()
 
-    options = ["Play Game","Learn About Oregon Trail","Quit"]   # Defining what will go into the menu 
-    menuChoices(options) # Calling to menuChoices
+    while True:
+        options = ["Play Game","Learn About Oregon Trail","Quit"]   # Defining what will go into the menu 
+        userChoice = menuChoices(options) # Calling to menuChoices
+
+        if userChoice == 1:
+            play()
+            break
+        elif userChoice == 2:
+            learn()
+        else:
+            quit
+            break
 
 def learn():
+    """ Learning about the trail. To use: learn() """
+    
     page =  ("Take a journey by covered wagon across 2000 miles of plains, rivers, and mountains. \
 On the plains you will slosh your oxen through mud and water filled ruts or will you plod through dust six inches deep", \
              "How will you cross the rivers, how will you spend yoru money? How will you use supplies? \
@@ -143,13 +161,15 @@ It's all up to you to make the choice..."\
 If you fail, try and try again til you succeed.")
     for i in page:
         print(i)
-        input("Press enter to go on...")
+        input("\nPress enter to go on...\n")
     
 def charCreate():
+    """ Runs and creates the Wagon Leader. Determines profession and money. To use: charCreate() """
+    
     options = ["Banker", "Carpenter", "Farmer", "Display Differences"] # Listing the menu options
-    userChoice = menuChoices(options)
 
     while True:
+        userChoice = menuChoices(options)
         # Defining what each choice will do! Becuase each choice affects the game.
         if userChoice == 1:
              prof = "Banker"
@@ -168,13 +188,16 @@ def charCreate():
             break
         elif userChoice == 4:
             # This is the "Display Differences" option
-            print('''\t\tA banker is rich and has $1600.
-            A Carpenter is middle class and has $800.
-            A Farmer is poor and has $400.''')
+            print('''\n\t\tA banker is rich and has $1600.
+            \tA Carpenter is middle class and has $800.
+            \tA Farmer is poor and has $400.''')
+            
         else:
             print("Sorry, that is not an option.")
 
 def getName(question):
+    """ Runs and gets names. To use: getName() """
+    
     while True:
         name = input(question) # Getting family memeber names
         if name == name.isnumeric: # Making sure that the name is numeric
@@ -186,16 +209,20 @@ def getName(question):
             print("Not valid!!")
 
 def familySetup(): # Setting up the family
+    """ Runs and gets family members' names. To use: familySetup() """
+    
     familyMembers = []
-    wagonLeader = getName(question="What is the name of your wagon leader?")
-    familyMem = getNumber(high=7,low=5,question="You need at 5-7 family memebers... How many do you have?")
+    wagonLeader = getName(question="What is the name of your wagon leader?  ")
+    familyMem = getNumber(high=7,low=5,question="You need at 5-7 family memebers... How many do you have?  ")
     for i in range(familyMem):
-        name = getName(question="What is the name of your family members?")
+        name = getName(question="What is the name of your family members?  ")
         familyMembers.append(name)
     return familyMembers, wagonLeader
     
 
 def getNumber(high,low,question): # Defining the high and low values with high=7 and low=5
+    """ Runs and gets a good number. To use: getNumber(high,low,question) """
+    
     while True:
         number = input(question)
         if number.isnumeric():
@@ -211,6 +238,8 @@ def getNumber(high,low,question): # Defining the high and low values with high=7
             print("Not valid!")
 
 def  shop(money,food,ammo,clothes,oxen):
+    """ Runs the shop. To use: shop(money,food,ammo,clothes,oxen) """
+    
     # Defining the things needed in the stores
     ammo = 0
     food = 0
@@ -224,7 +253,7 @@ def  shop(money,food,ammo,clothes,oxen):
     print("\n Before leaving for independence you should buy equipment and supplies.")
     print(str.format("\n You have {} in cash to make this trip.",money))
     print("Remember you can buy supplies along the way, so you don't have to spend it all now.")
-    print("\n\n Press any key to continue")
+    input("\n\n Press any key to continue")
 
     while True:
         moneySpent[len(items)-1] = bill
@@ -372,6 +401,8 @@ def  shop(money,food,ammo,clothes,oxen):
     
 
 def changeRations(currentRations):
+    """ Determines rations. To use: changeRations(currentRations) """
+    
     # Variables
     rations = ["Filling", "Meager", "Bare Bones"]
     currentRations = ""
@@ -401,6 +432,8 @@ def changeRations(currentRations):
                 print("You can't do that!\n")
 
 def changePace(currentPace):
+    """ Determines the current pace. To use: changePace(currentPace) """
+    
     # Variables
     pace = ["Slow","Normal","Fast"]
     currentPace = ""
@@ -452,6 +485,11 @@ def rest(currentRations,currentHealth):
 
     print("Your health is at:",currentHealth)
 
+def checkSupplies(money,oxen,food,ammo,clothes,parts):
+    supplies = [money,oxen,food,ammo,clothes,parts]
+    menuChoices(supplies)
+    
+
 def travel(health,pace,weather):
     """ Determines miles traveled. To use: travel(health,pace,weather) """
     
@@ -498,7 +536,8 @@ def travel(health,pace,weather):
             print("Invalid weather.")
 
 def turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate):
-    """ Starts the turn system... defines the weather, health, problems that can happen, etc... To use: turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate) """
+    """ Starts the turn system... defines the weather, health, problems that can happen, etc...
+To use: turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate) """
 
     # Selecting the weather
     weather = random.choice(["Hot","Cold","Rain","Snow"])
@@ -537,7 +576,7 @@ def turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMi
         health -= 50
     elif problem == "A member of your party got sick":
         hp -= 20
-    elif problem == "An ox has died."
+    elif problem == "An ox has died.":
         ox -= 1
         food += 50
 
@@ -572,15 +611,15 @@ def turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMi
 ;;;;;;;;;;;;;;;;;:::;;;::;;;+------------------------------------------------+;;;;,;;;;;;;;;;;;;;;;;
 """,currentDate.strftime("%A %b, %d, %Y"),weather,health,milesTravel,totalMiles,food,currentRations,problem))
 
-    options = ["Continue On",
+    while True:
+        options = ["Continue On",
                "Check Supplies",
                "Change Pace",
                "Change Rations",
                "Stop and Rest",
                "Attempt to trade",
                "Hunt for food"]
-
-    while True:
+        
         menuChoices(options)
         
         getNumber(1,6,"\n \tWhat would you like to do?  ")
@@ -600,7 +639,7 @@ def turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMi
                 food -= (len(familyMembers)+1)*rationsMod
                 currentDate += datetime.timedelta(days = 1)
         elif choice == 2:
-           # checkSupplies()
+           checkSupplies(money,oxen,food,ammo,clothes,parts)
         elif choice == 3:
             pace = changePace(currentPace)
             break
@@ -623,7 +662,7 @@ def turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMi
         elif choice == 7:
             print("You're hunting for food.")
             num = random.randint(1,2)
-            if num === 1:
+            if num == 1:
                 print("The hunt was successful")
                 lbs = random.randint(20,100)
                 print("You collected",str(lbs),"pounds of food.")
@@ -632,6 +671,8 @@ def turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMi
                 break
             else:
                 print("The hunt was not a success. You loose a day.")
+                currentDate += datetime.timedelta(days = 1)
+                food -= (len(familyMembers)+1)*rationsMod
 
     if hp <= 0:
         print("A member of your family has died")
@@ -643,9 +684,6 @@ def turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMi
     if food < 0:
         food = 0
 
-    if totalMiles < 0:
-        totalMiles = 0
-
     return oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate
         
 def play():
@@ -654,7 +692,7 @@ def play():
     # Importing things needed
     import datetime
     import random
-
+    
     # Starting the play stuff
     #############################################
 
@@ -682,21 +720,20 @@ def play():
     weather = "Cold"
     pace = "Normal"
 
-    familyList = wagonLeader,familyMembers
-
     prof,money = charCreate()
     familyMembers,wagonLeader = familySetup()
     shop(money,food,ammo,clothes,oxen)
+    turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,health,currentDate)
     
     #############################################
 
     # Setting win conditions
-    while totalMiles > 0 and len(familyMembers > 0:
+    while (totalMiles > 0) and (len(familyMembers) > 0):
         turn(oxen,food,pace,weather,health,familyMembers,rations,milesTravel,totalMiles,hp,currentDate)
     if toalMiles <= 0:
         print("Congrats you made it!")
     else:
         print("You lost... You and your family have all died.")
 
-currentHealth = 50
-rest("Meager",currentHealth)
+
+mainMenu()
