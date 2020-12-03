@@ -1,7 +1,7 @@
 # PROGRAM NAME: Oregon_Trail.py
 # PROGRAM PURPOSE: To play Oregon Trail
 # MADE BY: Lisette Spalding, Danson Coats, Hanna Kraemer
-# DATE LAST MODIFIED: 12-02-2020
+# DATE LAST MODIFIED: 12-03-2020
 # PYTHON VER. USED: 3.8
 
 def logoScreen():
@@ -203,8 +203,8 @@ def getNumber(high,low,question): # Defining the high and low values with high=7
         else: 
             print("Not valid!")
 
-def  shop(money,food,ammo,clothes,oxen):
-    """ Runs the shop. To use: shop(money,food,ammo,clothes,oxen) """
+def  shop(money,food,ammo,clothes,oxen,parts):
+    """ Runs the shop. To use: shop(money,food,ammo,clothes,oxen,parts) """
     
     # Defining the things needed in the stores
     ammo = 0
@@ -215,11 +215,6 @@ def  shop(money,food,ammo,clothes,oxen):
     bill = 0
     items = ["Oxen","Food","Clothes","Ammunition","Wagon Parts","Check Out"]
     moneySpent = [0.00,0.00,0.00,0.00,0.00,bill]
-
-    print("\n Before leaving for independence you should buy equipment and supplies.")
-    print(str.format("\n You have {} in cash to make this trip.",money))
-    print("Remember you can buy supplies along the way, so you don't have to spend it all now.")
-    input("\n\n Press any key to continue")
 
     while True:
         moneySpent[len(items)-1] = bill
@@ -239,7 +234,7 @@ def  shop(money,food,ammo,clothes,oxen):
         if choice == 1:
             # Resetting the money spent on this if the menu is acessed twice
             bill -= moneySpent[0]
-            ox = 0
+            oxen = 0
             moneySpent[0] = 0.00
 
             # Printing the menu
@@ -250,7 +245,7 @@ def  shop(money,food,ammo,clothes,oxen):
             answer = getNumber(high=5,low=1,question="\nHow many yokes do you want?")
             cost = answer*40
             bill += cost
-            ox = answer*2
+            oxen = answer*2
             moneySpent[0] = cost
             
         elif choice == 2:
@@ -305,8 +300,6 @@ def  shop(money,food,ammo,clothes,oxen):
             moneySpent[3] = cost
             
         elif choice == 5:
-            # Setting Inventory to nothing
-            parts = []
 
             # Printing the welcome screen
             print("It is a good idea to have a few spare parts for your wagon on hand... A broken wagon can be a death sentence.")
@@ -322,17 +315,17 @@ def  shop(money,food,ammo,clothes,oxen):
                 item = menuChoices(inventory)
                 
                 if item == 1:
-                    answer = answer = getNumber(high=6,low=0,question="\nHow many wagon wheels do you want?")
+                    answer = answer = getNumber(high=6,low=0,question="\nHow many wagon wheels do you want? (0-6)   ")
                     for i in range(answer):
                         parts.append("Wagon Wheel")
                     partsBill += partsCost[0]*answer
                 elif item == 2:
-                    answer = getNumber(high=6,low=0,question="\nHow many wagon axles do you want?")
+                    answer = getNumber(high=6,low=0,question="\nHow many wagon axles do you want? (0-6)    ")
                     for i in range(answer):
                         parts.append("Wagon Axle")
                     partsBill += partsCost[1]*answer
                 elif item == 3:
-                    answer = getNumber(high=6,low=0,question="\nHow many wagon tongues do you want?")
+                    answer = getNumber(high=6,low=0,question="\nHow many wagon tongues do you want? (0-6)   ")
                     for i in range(answer):
                         parts.append("Wagon Tongue")
                     partsBill += partsCost[2]*answer
@@ -344,14 +337,14 @@ def  shop(money,food,ammo,clothes,oxen):
         elif choice == 6:
             # Printing the store checkout
             print(str.format("You have spent:     ${:.2f}", bill))
-            correct = input("Is this correct?")
+            correct = input("Is this correct?   ")
 
             # Making sure that the user approves of their purchases
             if ("y" in correct) or ("Y" in correct):
                 if (money == moneySpent) or (money > moneySpent[0]):
                     money = money-moneySpent[0]
                     
-                    return money,food,ammo,clothes,oxen
+                    return money,food,ammo,clothes,oxen,parts
                 else:
                     print("This isn't valid... You've spent more money than you have!")
             else:
@@ -854,7 +847,29 @@ def trade(food,ammo,clothes,oxen,parts):
         
     else:
         print("Invalid trade...")
-        
+
+def wagonFix(partBroke,parts):
+    """ A function to fix your wagon. To use: wagonFix(partBroke,parts) """
+    import random
+
+    # Setting the wagon to broke
+    wagon = "Broke"
+
+    # Fixing the wagon is a 50/50 chance...
+    while partBroke in parts:
+        wagonChoice = input("Do you wish to repair your wagon?  ")
+        if ("y" in wagonChoice) or ("Y" in wagonChoice):
+            outcome = random.randint(1,2)
+            parts.remove(partBroke)
+            if outcome == 1:
+                wagon = "Fixed"
+                print("The fix was a success!!")
+                break
+            else:
+                print("You failed to fix the wagon...")
+        else:
+            print("Try trading! You can't continue like this!")
+
 def turn(food,ammo,clothes,oxen,parts,currentPace,weather,hp,health,familyMembers,currentRations,milesTravel,totalMiles,currentDate,money,wagon):
     """ Starts the turn system... defines the weather, health, problems that can happen, etc...
 To use: turn(food,ammo,clothes,oxen,parts,currentPace,weather,hp,health,familyMembers,currentRations,milesTravel,totalMiles,currentDate,money,wagon) """
@@ -893,65 +908,6 @@ To use: turn(food,ammo,clothes,oxen,parts,currentPace,weather,hp,health,familyMe
                              "No problems","No problems","No problems","No problems","No problems","No problems",
                              "No problems","No problems","No problems","No problems","No problems","No problems"])
 
-    # Determining what happens with each problem
-    if problem == "A member of your party got lost":
-        lost = random.randint(1,7)
-        famLost = random.choice(familyMembers)
-        print(str.format("{} got lost for {} days...",famLost,lost))
-        currentDate += datetime.timedelta(days=lost)
-        food -= (len(familyMembers))*rationsMod*lost
-    elif problem == "A member of your party got a snake bite.":
-        hp -= 50
-    elif problem == "A member of your party got sick":
-        hp -= 20
-    elif problem == "An ox has died.":
-        oxen -= 1
-        food += 50
-        
-    elif problem == "Your wagon axle broke.":
-        wagon = "Broke"
-        while "Wagon Axle" in parts:
-            wagonChoice = input("Do you wish to repair your wagon?  ")
-            if ("y" in wagonChoice) or ("Y" in wagonChoice):
-                outcome = random.randint(1,2)
-                parts.remove("Wagon Axle")
-                if outcome == 1:
-                    wagon = "Fixed"
-                    print("The fix was a success!!")
-                    break
-                else:
-                    print("You failed to fix the wagon...")
-                    
-    elif problem == "Your wagon wheel broke.":
-        wagon = "Broke"
-        while "Wagon Wheel" in parts:
-            wagonChoice = input("Do you wish to repair your wagon?  ")
-            if ("y" in wagonChoice) or ("Y" in wagonChoice):
-                outcome = random.randint(1,2)
-                parts.remove("Wagon Wheel")
-                if outcome == 1:
-                    wagon = "Fixed"
-                    print("The fix was a success!!")
-                    break
-                else:
-                    print("You failed to fix the wagon...")
-                    
-    elif problem == "Your wagon tongue broke.":
-        wagon = "Broke"
-        while "Wagon Tongue" in parts:
-            wagonChoice = input("Do you wish to repair your wagon?  ")
-            if ("y" in wagonChoice) or ("Y" in wagonChoice):
-                outcome = random.randint(1,2)
-                parts.remove("Wagon Tongue")
-                if outcome == 1:
-                    wagon = "Fixed"
-                    print("The fix was a success!!")
-                    break
-                else:
-                    print("You failed to fix the wagon...")
-    else:
-        print("Invalid problem")
-
     # Creating the ASCII Art for the main game
     while True:
         print(str.format("""
@@ -985,6 +941,31 @@ To use: turn(food,ammo,clothes,oxen,parts,currentPace,weather,hp,health,familyMe
 ;;;;;;;;;;;;;;;;;:::;;;::;;;+------------------------------------------------+;;;;,;;;;;;;;;;;;;;;;;
 """,currentDate.strftime("%A %b, %d, %Y"),weather,health,milesTravel,totalMiles,food,currentRations,problem))
 
+        # Determining what happens with each problem
+        if problem == "A member of your party got lost":
+            lost = random.randint(1,7)
+            famLost = random.choice(familyMembers)
+            print(str.format("{} got lost for {} days...",famLost,lost))
+            currentDate += datetime.timedelta(days=lost)
+            food -= (len(familyMembers))*rationsMod*lost
+        elif problem == "A member of your party got a snake bite.":
+            hp -= 50
+        elif problem == "A member of your party got sick":
+            hp -= 20
+        elif problem == "An ox has died.":
+            oxen -= 1
+            food += 50
+            
+        elif problem == "Your wagon axle broke.":
+            wagonFix("Wagon Axle",parts)
+                        
+        elif problem == "Your wagon wheel broke.":
+            wagonFix("Wagon Wheel",parts)
+                        
+        elif problem == "Your wagon tongue broke.":
+            wagonFix("Wagon Tongue",parts)
+            
+
         # Printing menu choices
         options = ["Continue On",
                "Check Supplies",
@@ -992,7 +973,9 @@ To use: turn(food,ammo,clothes,oxen,parts,currentPace,weather,hp,health,familyMe
                "Change Rations",
                "Stop and Rest",
                "Attempt to trade",
-               "Hunt for food"]
+               "Hunt for food",
+               "Shop",
+               "Fix Wagon"]
         
         choice = menuChoices(options) # I have the get good number built into my menu
 
@@ -1009,7 +992,7 @@ To use: turn(food,ammo,clothes,oxen,parts,currentPace,weather,hp,health,familyMe
                 totalMiles -= milesTravel
                 break
             else:
-                print("You can't continue today, try trading.") # Forcing them to trade!
+                input("You can't continue today, try trading. \n Press any key to continue.  ") # Forcing them to trade!
                 food -= (len(familyMembers)+1)*rationsMod
                 currentDate += datetime.timedelta(days = 1)
                 
@@ -1057,21 +1040,46 @@ To use: turn(food,ammo,clothes,oxen,parts,currentPace,weather,hp,health,familyMe
             else:
                 print("You do not have enough ammo to hunt")
             input("Press a key  ")
+            
+        elif choice == 8: # Determining what to do if the choice is number eight -- This is the "Shop" option
+            if money > 0:
+                shop(money,food,ammo,clothes,oxen,parts)
+            else:
+                print("You don't have any money! Try trading if you're stuck.")
+            input("Press any key to continue....   ")
+            
+        elif choice == 9:# Determining what to do if the choice is number nine -- This is the "Fix Wagon" option
+            if (wagon == "Broke"):
+                if problem == "Your wagon axle broke.":
+                    wagonFix("Wagon Axle",parts)
+                                
+                elif problem == "Your wagon wheel broke.":
+                    wagonFix("Wagon Wheel",parts)
+                                
+                elif problem == "Your wagon tongue broke.":
+                    wagonFix("Wagon Tongue",parts)
+            else:
+                print("You have a working wagon! ")
+            input("Press a key to continue...")
+            
+        else:
+            print("Please enter a number...")
 
     if hp <= 0: # Determining if a famiy memeber has died
         die = random.choice(familyMembers) # Choosing who died
         print("A member of your family,",die,"has died")
 
         # Getting if the player wants to go cannibal
-        famFood = input("Would you like to eat your family member?")
+        famFood = input("Would you like to eat your family member?  ")
         
         if ("y" in famFood) or ("Y" in famFood):
             familyMembers.remove(die)
             food += 100
-            print("Congratulations! You're all cannibals, but you got 100lbs of food.")
+            print("\nCongratulations! You're all cannibals, but at least you got 100lbs of food.")
         else:
             familyMembers.remove(die)
             print(die+"'s body was instead eaten by the wolves...")
+            
         hp = 100
         input("\n Press enter to continue:  ")
 
@@ -1097,10 +1105,10 @@ def play():
     money = 0
     prof = ""
     listOfProfs = []
-    familyMembers = ["Hello","Stabby"]
+    familyMembers = []
     wagonLeader = ""
     ammo = 0
-    food = 10000
+    food = 0
     clothes = 0
     oxen = 5
     parts = []
@@ -1117,9 +1125,13 @@ def play():
     weather = "Cold"
     currentPace = "Normal"
 
-##    prof,money = charCreate()
-##    familyMembers,wagonLeader = familySetup()
-##    money,food,ammo,clothes,oxen = shop(money,food,ammo,clothes,oxen)
+    prof,money = charCreate()
+    familyMembers,wagonLeader = familySetup()
+    print("\n Before leaving for independence you should buy equipment and supplies.")
+    print(str.format("\n You have {} in cash to make this trip.",money))
+    print("Remember you can buy supplies along the way, so you don't have to spend it all now.")
+    input("\n\n Press any key to continue")
+    money,food,ammo,clothes,oxen,parts = shop(money,food,ammo,clothes,oxen,parts)
     
     #############################################
 
