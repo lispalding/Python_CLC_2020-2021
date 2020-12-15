@@ -1132,13 +1132,13 @@ def play():
     weather = "Cold"
     currentPace = "Normal"
 
-##    prof,money = charCreate()
-##    familyMembers,wagonLeader = familySetup()
-##    print("\n Before leaving for independence you should buy equipment and supplies.")
-##    print(str.format("\n You have {} in cash to make this trip.",money))
-##    print("Remember you can buy supplies along the way, so you don't have to spend it all now.")
-##    input("\n\n Press any key to continue")
-##    money,food,ammo,clothes,oxen,parts = shop(money,food,ammo,clothes,oxen,parts)
+    prof,money = charCreate()
+    familyMembers,wagonLeader = familySetup()
+    print("\n Before leaving for independence you should buy equipment and supplies.")
+    print(str.format("\n You have {} in cash to make this trip.",money))
+    print("Remember you can buy supplies along the way, so you don't have to spend it all now.")
+    input("\n\n Press any key to continue")
+    money,food,ammo,clothes,oxen,parts = shop(money,food,ammo,clothes,oxen,parts)
 
     if food < 0:
         food = 0
